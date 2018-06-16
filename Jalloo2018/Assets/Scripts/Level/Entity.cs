@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using DogHouse.Core.Services;
+using DogHouse.Jalloo.Services;
 
 namespace DogHouse.Jalloo.Levels
 {
@@ -10,14 +12,34 @@ namespace DogHouse.Jalloo.Levels
     public abstract class Entity : MonoBehaviour
     {
         #region Public Variables
-        public PlayFieldPosition Position => m_position;
+        public PlayfieldPosition Position => currentPosition;
         public EntityType Type => m_type;
         #endregion
 
         #region Protected Variables
-        protected PlayFieldPosition m_position;
         protected EntityType m_type;
         #endregion
+
+        protected PlayfieldPosition currentPosition;
+        protected ServiceReference<ILevelManager> levelManager = new ServiceReference<ILevelManager>();
+
+        protected virtual void OnEnable()
+        {
+            currentPosition.X = (int)transform.position.x;
+            currentPosition.Y = (int)transform.position.z;
+        }
+        protected void UpdatePosition(int x, int y)
+        {
+            PlayfieldPosition previous = currentPosition;
+            currentPosition.X = x;
+            currentPosition.Y = y;
+            transform.position = new Vector3(currentPosition.X, 0, currentPosition.Y);
+            if(levelManager.isRegistered())
+            {
+                levelManager.Reference.UpdateMap(this, previous.X, previous.Y);
+            }
+        }
+
     }
 
     public enum EntityType
@@ -31,15 +53,15 @@ namespace DogHouse.Jalloo.Levels
         INVALID
     }
 
-    public struct PlayFieldPosition
+    public struct PlayfieldPosition
     {
-        public uint X;
-        public uint Y;
+        public int X;
+        public int Y;
 
-        public PlayFieldPosition(int x, int y)
+        public PlayfieldPosition(int x, int y)
         {
-            X = (uint)x;
-            Y = (uint)y;
+            X = x;
+            Y = y;
         }
     }
 }

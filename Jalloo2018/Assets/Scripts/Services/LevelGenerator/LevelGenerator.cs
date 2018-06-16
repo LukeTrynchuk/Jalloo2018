@@ -52,6 +52,36 @@ namespace DogHouse.Jalloo.Services
             {
                 CreateEntityRowInstance(data, i);
             }
+
+            CreateFloors(data);
+        }
+
+        private void CreateFloors(PlayfieldData data)
+        {
+            for(int i = 0; i < data.fieldData.GetLength(0); i++)
+            {
+                CreateFloorRowInstance(data, i);
+            }
+        }
+
+        private void CreateFloorRowInstance(PlayfieldData data, int i)
+        {
+            for(int j = 0; j < data.fieldData.GetLength(1); j++)
+            {
+                CreateFloorEntity(i, j);
+            }
+        }
+
+        private void CreateFloorEntity(int i, int j)
+        {
+            for (int currentIndex = 0; currentIndex < m_entityIDs.Length; currentIndex++)
+            {
+
+                if (m_entityIDs[currentIndex].Equals(EntityType.EMPTY.ToString()))
+                {
+                    GameObject entityObject = Instantiate(m_entityPrefabs[currentIndex], new Vector3(i, 0f, j), Quaternion.identity);
+                }
+            }
         }
 
         private void CreateEntityRowInstance(PlayfieldData data, int i)
@@ -66,10 +96,11 @@ namespace DogHouse.Jalloo.Services
         {
             for (int currentIndex = 0; currentIndex < m_entityIDs.Length; currentIndex++)
             {
+                if (m_entityIDs[currentIndex].Equals(EntityType.EMPTY.ToString())) continue;
+
                 if(m_entityIDs[currentIndex].Equals(data.fieldData[i,j].ToString()))
                 {
-                    GameObject entityObject = Instantiate(m_entityPrefabs[currentIndex]);
-                    entityObject.transform.position = new Vector3(i, 0f, j);
+                    GameObject entityObject = Instantiate(m_entityPrefabs[currentIndex], new Vector3(i, 0f, j), Quaternion.identity);
                 }
             }
         }
