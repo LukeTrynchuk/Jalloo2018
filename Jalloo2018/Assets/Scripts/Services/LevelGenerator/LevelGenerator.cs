@@ -68,8 +68,7 @@ namespace DogHouse.Jalloo.Services
             {
                 if(m_entityIDs[currentIndex].Equals(data.fieldData[i,j].ToString()))
                 {
-                    GameObject entityObject = Instantiate(m_entityPrefabs[currentIndex]);
-                    entityObject.transform.position = new Vector3(i, 0f, j);
+                    GameObject entityObject = Instantiate(m_entityPrefabs[currentIndex], new Vector3(i, 0f, j), Quaternion.identity);
                 }
             }
         }
