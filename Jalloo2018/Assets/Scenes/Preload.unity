@@ -286,7 +286,7 @@ GameObject:
   - component: {fileID: 1545351429}
   - component: {fileID: 1545351430}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: LevelGenerator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -316,8 +316,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12238f35312f8486596611f249c074a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_entityPrefabs: []
-  m_entityIDs: []
+  m_entityPrefabs:
+  - {fileID: 1329187683687188, guid: 119857db6c777435a8dfe5e61d4c8544, type: 2}
+  - {fileID: 1662860913615368, guid: 8c45552b4aae64a1b82555c2954a1d79, type: 2}
+  - {fileID: 1266313828880832, guid: 88d9addffec5641adb8ab1acf620054f, type: 2}
+  - {fileID: 1002182564710424, guid: 524046ea8f69e42c7801dd477d85a0e7, type: 2}
+  - {fileID: 1271306474787384, guid: 003be5a85df7f48199e30080c0e40a11, type: 2}
+  - {fileID: 1539877366555604, guid: f96b703f9a6eb4a249a3ea552e17a66d, type: 2}
+  m_entityIDs:
+  - BALL
+  - PLAYER
+  - WALL
+  - PANEL
+  - ENEMY
+  - EMPTY
 --- !u!1 &1677800146
 GameObject:
   m_ObjectHideFlags: 0
