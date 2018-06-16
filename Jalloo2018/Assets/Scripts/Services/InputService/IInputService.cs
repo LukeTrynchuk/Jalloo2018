@@ -7,9 +7,11 @@
 
 	public interface IInputService : IService 
 	{
-		Vector2 GetMovementVector();
-		bool PressedSelect();
-		bool PressedCancel();
-		bool PressedMenu();
+        event System.Action UpPressed;
+        event System.Action DownPressed;
+        event System.Action RightPressed;
+        event System.Action LeftPressed;
+
+        event System.Action InteractPressed;
 	}
 }

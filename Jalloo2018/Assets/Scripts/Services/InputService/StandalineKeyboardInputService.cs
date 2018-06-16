@@ -1,102 +1,37 @@
 ﻿namespace DogHouse.Jalloo.Services
 {
-
 	using System.Collections;
 	using System.Collections.Generic;
 	using UnityEngine;
     using DogHouse.Core.Services;
+    using System;
 
-	public class StandalineKeyboardInputService : MonoBehaviour , IInputService
-	{
-		#region Private Variables
-		private int m_numberOfJoysticks;
-		#endregion
+    public class StandalineKeyboardInputService : MonoBehaviour, IInputService
+    {
+        #region Public Variables
+        public event Action UpPressed;
+        public event Action DownPressed;
+        public event Action RightPressed;
+        public event Action LeftPressed;
+        public event Action InteractPressed;
+        #endregion
 
-		#region Main Methods
-		void Awake()
-		{
-			SetNumberOfJoySticks ();
-			if (m_numberOfJoysticks == 0)
-				RegisterService ();
-		}
+        #region Main Methods
+        void Start() => RegisterService();
 
-		void Update()
-		{
-			#if UNITY_STANDALONE
-			if (Input.GetJoystickNames ().Length == 0 && m_numberOfJoysticks > 0) 
-			{
-				RegisterService ();
-			}
-
-			SetNumberOfJoySticks ();
-			#endif
-		}
-
-		public Vector2 GetMovementVector()
-		{
-			bool left = Input.GetKeyDown (KeyCode.LeftArrow);
-			bool right = Input.GetKeyDown (KeyCode.RightArrow);
-			bool up = Input.GetKeyDown (KeyCode.UpArrow);
-			bool down = Input.GetKeyDown (KeyCode.DownArrow);
-			Vector2 deltaMovement = new Vector2 ();
-
-			if (left ^ right) 
-			{
-				if (left)
-					deltaMovement.x = -1;
-				if (right)
-					deltaMovement.x = 1;
-			}
-
-			if (up ^ down) 
-			{
-				if (up)
-					deltaMovement.y = 1;
-				if (down)
-					deltaMovement.y = -1;
-			}
-
-			return deltaMovement;
-		}
-
-		public bool PressedSelect()
-		{
-			if (Input.GetKeyDown (KeyCode.A))
-				return true;
-			return false;
-		}
-
-		public bool PressedCancel()
-		{
-			if (Input.GetKeyDown (KeyCode.Z))
-				return true;
-			return false;
-		}
-
-		public bool PressedMenu()
-		{
-			if (Input.GetKeyDown (KeyCode.X))
-				return true;
-			return false;
-		}
-
-        public void RegisterService()
+        void Update()
         {
-#if UNITY_STANDALONE
-            ServiceLocator.Register<IInputService>(this);
-#else
-				gameObject.SetActive(false);
-#endif
+            if (Input.GetKeyDown(KeyCode.W)) UpPressed?.Invoke();
+            if (Input.GetKeyDown(KeyCode.A)) LeftPressed?.Invoke();
+            if (Input.GetKeyDown(KeyCode.S)) DownPressed?.Invoke();
+            if (Input.GetKeyDown(KeyCode.D)) RightPressed?.Invoke();
+            if (Input.GetKeyDown(KeyCode.Space)) InteractPressed?.Invoke();
         }
-		#endregion
-
-		#region Low Level Functions
-
-		private void SetNumberOfJoySticks()
+		
+        public void RegisterService()
 		{
-			m_numberOfJoysticks = Input.GetJoystickNames ().Length;
+            ServiceLocator.Register<IInputService>(this);
 		}
-
-		#endregion
-	}
+        #endregion
+    }
 }
