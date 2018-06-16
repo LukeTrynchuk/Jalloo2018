@@ -9,6 +9,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Preload.unity
     guid: 4c1fefd63709e47ec81b96dec8d8c515
   - enabled: 1
-    path: Assets/Scenes/PlayArea.unity
-    guid: 196a998bf69a24447832cff116cefeec
+    path: "Assets/Scenes/TestScenes/\uF739LevelGeneration_Test.unity"
+    guid: ba474daa6bca348bc87fe864f177cb5f
   m_configObjects: {}
