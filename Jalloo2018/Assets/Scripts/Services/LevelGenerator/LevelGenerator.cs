@@ -94,34 +94,34 @@ namespace DogHouse.Jalloo.Services
         {
             for (int i = 0; i < lines[index].Length; i++)
             {
-                switch(lines[i])
+                switch(lines[index][i])
                 {
-                    case "-":
+                    case '_':
                         data.fieldData[index, i] = EntityType.EMPTY;
                         break;
 
-                    case "E":
+                    case 'E':
                         data.fieldData[index, i] = EntityType.ENEMY;
                         break;
 
-                    case "P":
+                    case 'P':
                         data.fieldData[index, i] = EntityType.PANEL;
                         break;
 
-                    case "U":
+                    case 'U':
                         data.fieldData[index, i] = EntityType.PLAYER;
                         break;
 
-                    case "B":
+                    case 'B':
                         data.fieldData[index, i] = EntityType.BALL;
                         break;
 
-                    case "X":
+                    case 'X':
                         data.fieldData[index, i] = EntityType.WALL;
                         break;
 
                     default:
-                        Debug.LogError("Symbol not recognized");
+                        Debug.LogError($"Symbol not recognized {lines[index][i]}");
                         break;
                 }
             }

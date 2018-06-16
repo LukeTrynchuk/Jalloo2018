@@ -18,7 +18,9 @@ namespace DogHouse.Jalloo.General
         public void GenerateALevel(string filePath)
         {
             if (!levelGenerator.isRegistered()) return;
-            levelGenerator.Reference.GenerateLevel(filePath);
+
+			string path = Application.dataPath + filePath;
+            levelGenerator.Reference.GenerateLevel(path);
         }
         #endregion
     }
