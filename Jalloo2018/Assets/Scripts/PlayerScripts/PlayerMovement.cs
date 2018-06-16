@@ -5,32 +5,18 @@ using DogHouse.Core.Services;
 using DogHouse.Jalloo.Services;
 using DogHouse.Jalloo.Levels;
 
-public class PlayerMovement : MonoBehaviour {
+public class PlayerMovement : Entity {
 
     ServiceReference<IInputService> inputService = new ServiceReference<IInputService>();
 
-    Vector3[,] gridPositions;
 
-    PlayfieldPosition currentPosition;
-    int arraySize = 10;
+    PlayfieldData levelData;
 
-	// Use this for initialization
-	void Start () {
-        gridPositions = new Vector3[arraySize,arraySize];
-        for (int x = 0; x < arraySize; x++)
-        {
-            for (int y = 0; y < arraySize; y++)
-            {
-                gridPositions[x, y] = new Vector3(-arraySize/2 + x, 0, arraySize/2 - y);
-            }
-        }
-    }
-
-    private void OnEnable()
+    
+    protected override void OnEnable()
     {
+        base.OnEnable();
         inputService.AddRegistrationHandle(HandleInputRegister);
-        currentPosition.X = (int)transform.position.x;
-        currentPosition.Y = (int)transform.position.z;
     }
 
     void HandleInputRegister()
@@ -63,43 +49,59 @@ public class PlayerMovement : MonoBehaviour {
 
     void UpPressed()
     {
-        if(currentPosition.Y+1>=0)
+        if(BoundCheck(currentPosition.X, currentPosition.Y + 1))
         {
-            currentPosition.Y += 1;
-            transform.position = new Vector3(currentPosition.X, 0,currentPosition.Y);
+            int nextPosY = currentPosition.Y + 1;
+            UpdatePosition(currentPosition.X, nextPosY);
         }
     }
 
     void DownPressed()
     {
-        if (currentPosition.Y - 1 >= 0)
+        if (BoundCheck(currentPosition.X, currentPosition.Y - 1))
         {
-            currentPosition.Y -= 1;
-            transform.position = new Vector3(currentPosition.X, 0, currentPosition.Y);
+            int nextPosY = currentPosition.Y - 1;
+            UpdatePosition(currentPosition.X, nextPosY);
         }
     }
 
     void RightPressed()
     {
-        if (currentPosition.X + 1 <= arraySize-1)
+        if (BoundCheck(currentPosition.X + 1, currentPosition.Y))
         {
-            currentPosition.X += 1;
-            transform.position = new Vector3(currentPosition.X, 0, currentPosition.Y);
+            int nextPosX = currentPosition.X + 1;
+            UpdatePosition(nextPosX, currentPosition.Y);
         }
     }
 
     void LeftPressed()
     {
-        if (currentPosition.X - 1 >= 0)
+        if (BoundCheck(currentPosition.X - 1,currentPosition.Y))
         {
-            currentPosition.X -= 1;
-            transform.position = new Vector3(currentPosition.X, 0, currentPosition.Y);
-            Debug.Log(currentPosition.X);
+            int nextPosX = currentPosition.X - 1;
+            UpdatePosition(nextPosX, currentPosition.Y);
         }
     }
 
     void Interact()
     {
        
+    }
+
+    bool BoundCheck(int x, int y)
+    {
+        if(!levelManager.isRegistered())
+        {
+            return false;
+        }
+        levelData = levelManager.Reference.GetLevelData();
+        if(levelData.fieldData[x,y] == EntityType.EMPTY || levelData.fieldData[x, y] == EntityType.PANEL)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

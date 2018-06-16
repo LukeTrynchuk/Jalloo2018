@@ -5,11 +5,11 @@ using DogHouse.Core.Services;
 using DogHouse.Jalloo.Services;
 using DogHouse.Jalloo.Levels;
 
-public class LevelManager : MonoBehaviour {
+public class LevelManager : MonoBehaviour,ILevelManager {
 
     ServiceReference<ILevelGenerator> levelGenerator = new ServiceReference<ILevelGenerator>();
 
-    public PlayfieldData level;
+    PlayfieldData level;
 
 	// Use this for initialization
 	void Start () {
@@ -19,6 +19,7 @@ public class LevelManager : MonoBehaviour {
     private void OnEnable()
     {
         levelGenerator.AddRegistrationHandle(Register);
+        RegisterService();
     }
     private void OnDisable()
     {
@@ -40,4 +41,20 @@ public class LevelManager : MonoBehaviour {
     void Update () {
 		
 	}
+
+    public PlayfieldData GetLevelData()
+    {
+        return level;
+    }
+
+    public void RegisterService()
+    {
+        ServiceLocator.Register<ILevelManager>(this);
+    }
+
+    public void UpdateMap(Entity obj, int previousX, int previousY)
+    {
+        level.fieldData[previousX, previousY] = EntityType.EMPTY;
+        level.fieldData[obj.Position.X, obj.Position.Y] = obj.Type;
+    }
 }
