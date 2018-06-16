@@ -80,14 +80,14 @@
 			return false;
 		}
 
-		public void RegisterService()
-		{
-			#if UNITY_STANDALONE
-				ServiceLocator.Register<IInputService>(this);
-			#elif
+        public void RegisterService()
+        {
+#if UNITY_STANDALONE
+            ServiceLocator.Register<IInputService>(this);
+#else
 				gameObject.SetActive(false);
-			#endif
-		}
+#endif
+        }
 		#endregion
 
 		#region Low Level Functions

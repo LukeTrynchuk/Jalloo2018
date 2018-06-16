@@ -15,24 +15,22 @@ namespace DogHouse.Jalloo.Scenes
         #region Main Methods
         public void AdvanceScene()
         {
-            Scene nextScene = GetNextScene();
-            AdvanceToScene(nextScene);
+            Scene currentScene = GetCurrentScene();
+            LoadNextScene(currentScene);
         }
         #endregion
 
         #region Utility Methods
-        private void AdvanceToScene(Scene sceneToLoad)
+        private void LoadNextScene(Scene currentScene)
 		{
-            if (!sceneToLoad.IsValid()) return;
-            SceneManager.LoadScene(sceneToLoad.name);
+            if (IsLastScene(currentScene)) return;
+            SceneManager.LoadScene(currentScene.buildIndex + 1);
 		}
-		
-		private Scene GetNextScene()
-		{
-            Scene currentScene = SceneManager.GetActiveScene();
-            Scene nextScene = SceneManager.GetSceneByBuildIndex(currentScene.buildIndex + 1);
-            return nextScene;
-		}
+
+        private bool IsLastScene(Scene sceneToTest) => 
+            sceneToTest.buildIndex >= SceneManager.sceneCountInBuildSettings;
+
+        private Scene GetCurrentScene() => SceneManager.GetActiveScene();
         #endregion
     }
 }
