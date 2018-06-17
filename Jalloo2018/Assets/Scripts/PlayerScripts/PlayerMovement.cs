@@ -11,7 +11,7 @@ public class PlayerMovement : Entity {
 
 
     PlayfieldData levelData;
-
+    bool hasBall = false;
     
     protected override void OnEnable()
     {
@@ -26,6 +26,7 @@ public class PlayerMovement : Entity {
         inputService.Reference.RightPressed += RightPressed;
         inputService.Reference.LeftPressed += LeftPressed;
         inputService.Reference.InteractPressed += Interact;
+        inputService.Reference.RotationChanged += RotatePlayer;
 
     }
 
@@ -38,6 +39,7 @@ public class PlayerMovement : Entity {
             inputService.Reference.RightPressed -= RightPressed;
             inputService.Reference.LeftPressed -= LeftPressed;
             inputService.Reference.InteractPressed -= Interact;
+            inputService.Reference.RotationChanged -= RotatePlayer;
         }
     }
 
@@ -53,6 +55,10 @@ public class PlayerMovement : Entity {
         {
             int nextPosY = currentPosition.Y + 1;
             UpdatePosition(currentPosition.X, nextPosY);
+            if(!hasBall)
+            {
+                transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+            }          
         }
     }
 
@@ -62,6 +68,10 @@ public class PlayerMovement : Entity {
         {
             int nextPosY = currentPosition.Y - 1;
             UpdatePosition(currentPosition.X, nextPosY);
+            if(!hasBall)
+            {
+                transform.rotation = Quaternion.Euler(new Vector3(0, 180f, 0));
+            }  
         }
     }
 
@@ -71,6 +81,10 @@ public class PlayerMovement : Entity {
         {
             int nextPosX = currentPosition.X + 1;
             UpdatePosition(nextPosX, currentPosition.Y);
+            if (!hasBall)
+            {
+                transform.rotation = Quaternion.Euler(new Vector3(0, 90f, 0));
+            }
         }
     }
 
@@ -80,6 +94,18 @@ public class PlayerMovement : Entity {
         {
             int nextPosX = currentPosition.X - 1;
             UpdatePosition(nextPosX, currentPosition.Y);
+            if(!hasBall)
+            {
+                transform.rotation = Quaternion.Euler(new Vector3(0, 270f, 0));
+            }
+        }
+    }
+
+    void RotatePlayer(Vector2 rotation)
+    {
+        if(hasBall)
+        {
+
         }
     }
 
