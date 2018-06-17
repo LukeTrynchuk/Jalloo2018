@@ -5,7 +5,6 @@ using DogHouse.Jalloo.Levels;
 using DogHouse.Core.Services;
 
 public interface ILevelManager : IService {
-
     PlayfieldData GetLevelData();
     void UpdateMap(Entity obj, int previousX,int previousY);
 }

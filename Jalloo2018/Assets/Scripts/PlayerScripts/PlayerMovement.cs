@@ -138,8 +138,33 @@ public class PlayerMovement : Entity {
     {
         if (levelManager.Reference.GetLevelData().fieldData[x, y] == EntityType.BALL)
         {
-            hasBall = true;
+            
+            GameObject ball = GetBall(x, y);
+            if(ball != null)
+            {
+                ball.transform.parent = this.transform;
+                hasBall = true;
+            }
+            else
+            {
+                Debug.LogError("Something fucked Up hardcore");
+            }
         }
+    }
+
+    GameObject GetBall(int x, int y)
+    {
+        GameObject[] balls = GameObject.FindGameObjectsWithTag("Ball");
+
+        for (int i = 0; i < balls.Length; i++)
+        {
+            Entity entity = balls[i].GetComponent<Entity>();
+            if(entity.Position.X == x && entity.Position.Y == y)
+            {
+                return balls[i];
+            }
+        }
+        return null;
     }
 
     bool BoundCheck(int x, int y)
