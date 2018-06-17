@@ -1,11 +1,9 @@
-﻿namespace DogHouse.Jalloo.Services
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-    using DogHouse.Core.Services;
-    using System;
+﻿using UnityEngine;
+using DogHouse.Core.Services;
+using System;
 
+namespace DogHouse.Jalloo.Services
+{
     public class StandalineKeyboardInputService : MonoBehaviour, IInputService
     {
         #region Public Variables
@@ -27,8 +25,21 @@
             if (Input.GetKeyDown(KeyCode.S)) DownPressed?.Invoke();
             if (Input.GetKeyDown(KeyCode.D)) RightPressed?.Invoke();
             if (Input.GetKeyDown(KeyCode.Space)) InteractPressed?.Invoke();
+
+            DetermineRotationInput();
         }
-		
+
+        private void DetermineRotationInput()
+        {
+            float horizontal = Input.GetKeyDown(KeyCode.RightArrow) ? 1 : 0;
+            horizontal -= Input.GetKeyDown(KeyCode.LeftArrow) ? 1 : 0;
+
+            float vertical = Input.GetKeyDown(KeyCode.UpArrow) ? 1 : 0;
+            vertical -= Input.GetKeyDown(KeyCode.DownArrow) ? 1 : 0;
+
+            RotationChanged?.Invoke(new Vector2(horizontal, vertical));
+        }
+
         public void RegisterService()
 		{
             ServiceLocator.Register<IInputService>(this);
