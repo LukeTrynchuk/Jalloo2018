@@ -15,6 +15,7 @@ public class PlayerMovement : Entity {
     PlayfieldData levelData;
     bool hasBall = false;
     direction dir = direction.UP;
+    Ball heldBall;
     
     protected override void OnEnable()
     {
@@ -54,61 +55,29 @@ public class PlayerMovement : Entity {
 
     void UpPressed()
     {
-        if(BoundCheck(currentPosition.X, currentPosition.Y + 1))
-        {
-            int nextPosY = currentPosition.Y + 1;
-            UpdatePosition(currentPosition.X, nextPosY);
-            if(!hasBall)
-            {
-                Rotate(direction.UP);
-            }          
-        }
+        Move(direction.UP);
     }
 
     void DownPressed()
     {
-        if (BoundCheck(currentPosition.X, currentPosition.Y - 1))
-        {
-            int nextPosY = currentPosition.Y - 1;
-            UpdatePosition(currentPosition.X, nextPosY);
-            if(!hasBall)
-            {
-                Rotate(direction.DOWN);
-            }  
-        }
+        Move(direction.DOWN);
     }
 
     void RightPressed()
     {
-        if (BoundCheck(currentPosition.X + 1, currentPosition.Y))
-        {
-            int nextPosX = currentPosition.X + 1;
-            UpdatePosition(nextPosX, currentPosition.Y);
-            if (!hasBall)
-            {
-                Rotate(direction.RIGHT);
-            }
-        }
+        Move(direction.RIGHT);
     }
 
     void LeftPressed()
     {
-        if (BoundCheck(currentPosition.X - 1,currentPosition.Y))
-        {
-            int nextPosX = currentPosition.X - 1;
-            UpdatePosition(nextPosX, currentPosition.Y);
-            if(!hasBall)
-            {
-                Rotate(direction.LEFT);
-            }
-        }
+        Move(direction.LEFT);
     }
 
     void RotatePlayer(Vector2 rotation)
     {
         if(hasBall)
         {
-
+            
         }
     }
 
@@ -140,6 +109,8 @@ public class PlayerMovement : Entity {
         {
             
             GameObject ball = GetBall(x, y);
+            heldBall = ball.GetComponent<Ball>();
+
             if(ball != null)
             {
                 ball.transform.parent = this.transform;
@@ -202,5 +173,99 @@ public class PlayerMovement : Entity {
                 break;
         }
         dir = direct;  
+    }
+
+    bool IsValidMoveWithBall(direction direct)
+    {
+        if (dir == direction.LEFT || dir == direction.RIGHT)
+        {
+            if (direct == direction.UP || direct == direction.DOWN)
+            {
+                return false;
+            }
+        }
+        if (dir == direction.UP || dir == direction.DOWN)
+        {
+            if (direct == direction.RIGHT || direct == direction.LEFT)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    void MoveWithBall(direction direct)
+    {
+        if(!IsValidMoveWithBall(direct))
+        {
+            return;
+        }
+
+        PlayfieldPosition position = currentPosition;
+        PlayfieldPosition ballPosition = heldBall.Position;
+        PlayfieldPosition boundPosition = currentPosition;
+        switch (direct)
+        {
+            case direction.UP:
+                position.Y += 1;
+                ballPosition.Y += 1;
+                boundPosition.Y += dir == direction.UP?2:1;
+                break;
+            case direction.DOWN:
+                position.Y -= 1;
+                ballPosition.Y -= 1;
+                boundPosition.Y -= dir == direction.DOWN ? 2 : 1;
+                break;
+            case direction.RIGHT:
+                position.X += 1;
+                ballPosition.X += 1;
+                boundPosition.X += dir == direction.RIGHT ? 2 : 1;
+                break;
+            case direction.LEFT:
+                position.X -= 1;
+                ballPosition.X -= 1;
+                boundPosition.X -= dir == direction.LEFT ? 2 : 1;
+                break;
+        }
+        if (BoundCheck(boundPosition.X, boundPosition.Y))
+        {
+            UpdatePosition(position.X, position.Y);
+            heldBall.UpdatePosition(ballPosition.X,ballPosition.Y);
+
+        }
+    }
+    void MoveWithoutBall(direction direct)
+    {
+        PlayfieldPosition position = currentPosition;
+        switch(direct)
+        {
+            case direction.UP:
+                position.Y += 1;
+                break;
+            case direction.DOWN:
+                position.Y -= 1;
+                break;
+            case direction.RIGHT:
+                position.X += 1;
+                break;
+            case direction.LEFT:
+                position.X -= 1;
+                break;
+        }
+        if (BoundCheck(position.X, position.Y))
+        {
+            UpdatePosition(position.X, position.Y);
+            Rotate(direct);
+        }
+    }
+    void Move(direction direct)
+    {
+        if (!hasBall)
+        {
+            MoveWithoutBall(direct);
+        }
+        else
+        {
+            MoveWithBall(direct);
+        }
     }
 }

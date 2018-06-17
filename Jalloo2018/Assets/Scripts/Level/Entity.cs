@@ -28,7 +28,7 @@ namespace DogHouse.Jalloo.Levels
             currentPosition.X = (int)transform.position.x;
             currentPosition.Y = (int)transform.position.z;
         }
-        protected void UpdatePosition(int x, int y)
+        public void UpdatePosition(int x, int y)
         {
             PlayfieldPosition previous = currentPosition;
             currentPosition.X = x;
