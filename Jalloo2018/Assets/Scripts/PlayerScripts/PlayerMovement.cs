@@ -30,8 +30,6 @@ public class PlayerMovement : Entity {
         inputService.Reference.RightPressed += RightPressed;
         inputService.Reference.LeftPressed += LeftPressed;
         inputService.Reference.InteractPressed += Interact;
-        inputService.Reference.RotationChanged += RotatePlayer;
-
     }
 
     private void OnDisable()
@@ -43,14 +41,7 @@ public class PlayerMovement : Entity {
             inputService.Reference.RightPressed -= RightPressed;
             inputService.Reference.LeftPressed -= LeftPressed;
             inputService.Reference.InteractPressed -= Interact;
-            inputService.Reference.RotationChanged -= RotatePlayer;
         }
-    }
-
-    // Update is called once per frame
-    void Update () {
-
-        
     }
 
     void UpPressed()
@@ -71,14 +62,6 @@ public class PlayerMovement : Entity {
     void LeftPressed()
     {
         Move(direction.LEFT);
-    }
-
-    void RotatePlayer(Vector2 rotation)
-    {
-        if(hasBall)
-        {
-            
-        }
     }
 
     void Interact()
@@ -193,16 +176,55 @@ public class PlayerMovement : Entity {
         }
         return true;
     }
+
+    void AttemptTurn(direction direct)
+    {
+        Debug.Log("TURNING");
+
+        PlayfieldPosition boundPosition = currentPosition;
+        switch(direct)
+        {
+            case direction.UP:
+                boundPosition.Y += 1;
+                boundPosition.X += dir == direction.RIGHT ? 1 : -1;
+
+                break;
+            case direction.DOWN:
+                boundPosition.Y -= 1;
+                boundPosition.X += dir == direction.RIGHT ? 1 : -1;
+                break;
+            case direction.RIGHT:
+                boundPosition.X += 1;
+                boundPosition.Y += dir == direction.UP ? 1 : -1;
+
+                break;
+            case direction.LEFT:
+                boundPosition.X -= 1;
+                boundPosition.Y += dir == direction.UP ? 1 : -1;
+                break;
+        }
+        if(BoundCheck(boundPosition.X,boundPosition.Y))
+        {
+            PlayfieldPosition ballOldPosition = heldBall.Position;
+            
+            UpdatePosition(ballOldPosition.X, ballOldPosition.Y);
+            Rotate(direct);
+            heldBall.UpdatePosition(boundPosition.X, boundPosition.Y);
+        }
+    }
+
     void MoveWithBall(direction direct)
     {
         if(!IsValidMoveWithBall(direct))
         {
+            AttemptTurn(direct);
             return;
         }
 
         PlayfieldPosition position = currentPosition;
         PlayfieldPosition ballPosition = heldBall.Position;
         PlayfieldPosition boundPosition = currentPosition;
+
         switch (direct)
         {
             case direction.UP:

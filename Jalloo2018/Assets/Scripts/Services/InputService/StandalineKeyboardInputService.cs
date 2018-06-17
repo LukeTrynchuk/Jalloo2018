@@ -12,7 +12,6 @@ namespace DogHouse.Jalloo.Services
         public event Action RightPressed;
         public event Action LeftPressed;
         public event Action InteractPressed;
-        public event Action<Vector2> RotationChanged;
         #endregion
 
         #region Main Methods
@@ -25,19 +24,6 @@ namespace DogHouse.Jalloo.Services
             if (Input.GetKeyDown(KeyCode.S)) DownPressed?.Invoke();
             if (Input.GetKeyDown(KeyCode.D)) RightPressed?.Invoke();
             if (Input.GetKeyDown(KeyCode.Space)) InteractPressed?.Invoke();
-
-            DetermineRotationInput();
-        }
-
-        private void DetermineRotationInput()
-        {
-            float horizontal = Input.GetKeyDown(KeyCode.RightArrow) ? 1 : 0;
-            horizontal -= Input.GetKeyDown(KeyCode.LeftArrow) ? 1 : 0;
-
-            float vertical = Input.GetKeyDown(KeyCode.UpArrow) ? 1 : 0;
-            vertical -= Input.GetKeyDown(KeyCode.DownArrow) ? 1 : 0;
-
-            RotationChanged?.Invoke(new Vector2(horizontal, vertical));
         }
 
         public void RegisterService()
