@@ -359,7 +359,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_entityPrefabs:
   - {fileID: 1329187683687188, guid: 119857db6c777435a8dfe5e61d4c8544, type: 2}
-  - {fileID: 1662860913615368, guid: 8c45552b4aae64a1b82555c2954a1d79, type: 2}
+  - {fileID: 1990168275928686, guid: 5290c436091b4434a98032760f7442af, type: 2}
   - {fileID: 1266313828880832, guid: 88d9addffec5641adb8ab1acf620054f, type: 2}
   - {fileID: 1002182564710424, guid: 524046ea8f69e42c7801dd477d85a0e7, type: 2}
   - {fileID: 1271306474787384, guid: 003be5a85df7f48199e30080c0e40a11, type: 2}
