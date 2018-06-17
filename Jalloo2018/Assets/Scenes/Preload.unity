@@ -358,10 +358,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_entityPrefabs:
-  - {fileID: 1329187683687188, guid: 119857db6c777435a8dfe5e61d4c8544, type: 2}
+  - {fileID: 1668481500778022, guid: bee71c3b615744819abbcb2ed8f63083, type: 2}
   - {fileID: 1990168275928686, guid: 5290c436091b4434a98032760f7442af, type: 2}
   - {fileID: 1266313828880832, guid: 88d9addffec5641adb8ab1acf620054f, type: 2}
-  - {fileID: 1002182564710424, guid: 524046ea8f69e42c7801dd477d85a0e7, type: 2}
+  - {fileID: 1068595514961264, guid: 49a9ffbebaca149799322c1bee9fd34a, type: 2}
   - {fileID: 1271306474787384, guid: 003be5a85df7f48199e30080c0e40a11, type: 2}
   - {fileID: 1539877366555604, guid: f96b703f9a6eb4a249a3ea552e17a66d, type: 2}
   m_entityIDs:

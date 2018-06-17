@@ -1,20 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using DogHouse.Core.Services;
 using DogHouse.Jalloo.Services;
 using DogHouse.Jalloo.Levels;
 
-public enum direction { RIGHT,LEFT,UP,DOWN}
+public enum Direction { RIGHT,LEFT,UP,DOWN}
 
-public class PlayerMovement : Entity {
-
+public class PlayerMovement : Entity 
+{
     ServiceReference<IInputService> inputService = new ServiceReference<IInputService>();
 
 
     PlayfieldData levelData;
     bool hasBall = false;
-    direction dir = direction.UP;
+    Direction dir = Direction.UP;
     Ball heldBall;
     
     protected override void OnEnable()
@@ -46,22 +44,22 @@ public class PlayerMovement : Entity {
 
     void UpPressed()
     {
-        Move(direction.UP);
+        Move(Direction.UP);
     }
 
     void DownPressed()
     {
-        Move(direction.DOWN);
+        Move(Direction.DOWN);
     }
 
     void RightPressed()
     {
-        Move(direction.RIGHT);
+        Move(Direction.RIGHT);
     }
 
     void LeftPressed()
     {
-        Move(direction.LEFT);
+        Move(Direction.LEFT);
     }
 
     void Interact()
@@ -70,19 +68,25 @@ public class PlayerMovement : Entity {
         {
             switch (dir)
             {
-                case direction.UP:
+                case Direction.UP:
                     AttemptGrab(currentPosition.X, currentPosition.Y + 1);
                     break;
-                case direction.DOWN:
+                case Direction.DOWN:
                     AttemptGrab(currentPosition.X, currentPosition.Y - 1);
                     break;
-                case direction.RIGHT:
+                case Direction.RIGHT:
                     AttemptGrab(currentPosition.X + 1, currentPosition.Y);
                     break;
-                case direction.LEFT:
+                case Direction.LEFT:
                     AttemptGrab(currentPosition.X - 1, currentPosition.Y);
                     break;
             }
+        }
+        else
+        {
+            heldBall.transform.parent = null;
+            hasBall = false;
+            heldBall.Launch(dir);
         }
     }
 
@@ -121,55 +125,38 @@ public class PlayerMovement : Entity {
         return null;
     }
 
-    bool BoundCheck(int x, int y)
-    {
-        if(!levelManager.isRegistered())
-        {
-            return false;
-        }
-        levelData = levelManager.Reference.GetLevelData();
-        if(levelData.fieldData[x,y] == EntityType.EMPTY || levelData.fieldData[x, y] == EntityType.PANEL)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    void Rotate(direction direct)
+    void Rotate(Direction direct)
     {
         switch(direct)
         {
-            case direction.RIGHT:
+            case Direction.RIGHT:
                 transform.rotation = Quaternion.Euler(new Vector3(0, 90f, 0));
                 break;
-            case direction.LEFT:
+            case Direction.LEFT:
                 transform.rotation = Quaternion.Euler(new Vector3(0, 270f, 0));
                 break;
-            case direction.DOWN:
+            case Direction.DOWN:
                 transform.rotation = Quaternion.Euler(new Vector3(0, 180f, 0));
                 break;
-            case direction.UP:
+            case Direction.UP:
                 transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
                 break;
         }
         dir = direct;  
     }
 
-    bool IsValidMoveWithBall(direction direct)
+    bool IsValidMoveWithBall(Direction direct)
     {
-        if (dir == direction.LEFT || dir == direction.RIGHT)
+        if (dir == Direction.LEFT || dir == Direction.RIGHT)
         {
-            if (direct == direction.UP || direct == direction.DOWN)
+            if (direct == Direction.UP || direct == Direction.DOWN)
             {
                 return false;
             }
         }
-        if (dir == direction.UP || dir == direction.DOWN)
+        if (dir == Direction.UP || dir == Direction.DOWN)
         {
-            if (direct == direction.RIGHT || direct == direction.LEFT)
+            if (direct == Direction.RIGHT || direct == Direction.LEFT)
             {
                 return false;
             }
@@ -177,52 +164,52 @@ public class PlayerMovement : Entity {
         return true;
     }
 
-    void AttemptTurn(direction direct)
+    void AttemptTurn(Direction direct)
     {
-        Debug.Log("TURNING");
-
         PlayfieldPosition ballFacingBounds = currentPosition;
         PlayfieldPosition playerFacingBounds = currentPosition;
-        direction inverse = dir;
+        Direction inverse = dir;
 
         switch(direct)
         {
-            case direction.UP:
+            case Direction.UP:
                 ballFacingBounds.Y += 1;
-                ballFacingBounds.X += dir == direction.RIGHT ? 1 : -1;
+                ballFacingBounds.X += dir == Direction.RIGHT ? 1 : -1;
 
                 playerFacingBounds.Y += 1;
-                inverse = direction.DOWN;
+                inverse = Direction.DOWN;
                 break;
-            case direction.DOWN:
+            case Direction.DOWN:
                 ballFacingBounds.Y -= 1;
-                ballFacingBounds.X += dir == direction.RIGHT ? 1 : -1;
+                ballFacingBounds.X += dir == Direction.RIGHT ? 1 : -1;
 
                 playerFacingBounds.Y -= 1;
-                inverse = direction.UP;
+                inverse = Direction.UP;
                 break;
-            case direction.RIGHT:
+            case Direction.RIGHT:
                 ballFacingBounds.X += 1;
-                ballFacingBounds.Y += dir == direction.UP ? 1 : -1;
+                ballFacingBounds.Y += dir == Direction.UP ? 1 : -1;
 
                 playerFacingBounds.X += 1;
-                inverse = direction.LEFT;
+                inverse = Direction.LEFT;
                 break;
-            case direction.LEFT:
+            case Direction.LEFT:
                 ballFacingBounds.X -= 1;
-                ballFacingBounds.Y += dir == direction.UP ? 1 : -1;
+                ballFacingBounds.Y += dir == Direction.UP ? 1 : -1;
 
                 playerFacingBounds.X -= 1;
-                inverse = direction.RIGHT;
+                inverse = Direction.RIGHT;
                 break;
         }
         if(BoundCheck(ballFacingBounds.X,ballFacingBounds.Y))
         {
             PlayfieldPosition ballOldPosition = heldBall.Position;
-            
+            PlayfieldPosition oldPlayerPosition = currentPosition;
+
             UpdatePosition(ballOldPosition.X, ballOldPosition.Y);
             Rotate(direct);
             heldBall.UpdatePosition(ballFacingBounds.X, ballFacingBounds.Y);
+            levelManager.Reference.SetTileValue(oldPlayerPosition.X, oldPlayerPosition.Y, EntityType.PLAYER);
             return;
         }
 
@@ -233,11 +220,12 @@ public class PlayerMovement : Entity {
             UpdatePosition(playerFacingBounds.X, playerFacingBounds.Y);
             Rotate(inverse);
             heldBall.UpdatePosition(oldPlayerPosition.X, oldPlayerPosition.Y);
+            levelManager.Reference.SetTileValue(oldPlayerPosition.X, oldPlayerPosition.Y, EntityType.PLAYER);
             return;
         }
     }
 
-    void MoveWithBall(direction direct)
+    void MoveWithBall(Direction direct)
     {
         if(!IsValidMoveWithBall(direct))
         {
@@ -251,49 +239,50 @@ public class PlayerMovement : Entity {
 
         switch (direct)
         {
-            case direction.UP:
+            case Direction.UP:
                 position.Y += 1;
                 ballPosition.Y += 1;
-                boundPosition.Y += dir == direction.UP?2:1;
+                boundPosition.Y += dir == Direction.UP?2:1;
                 break;
-            case direction.DOWN:
+            case Direction.DOWN:
                 position.Y -= 1;
                 ballPosition.Y -= 1;
-                boundPosition.Y -= dir == direction.DOWN ? 2 : 1;
+                boundPosition.Y -= dir == Direction.DOWN ? 2 : 1;
                 break;
-            case direction.RIGHT:
+            case Direction.RIGHT:
                 position.X += 1;
                 ballPosition.X += 1;
-                boundPosition.X += dir == direction.RIGHT ? 2 : 1;
+                boundPosition.X += dir == Direction.RIGHT ? 2 : 1;
                 break;
-            case direction.LEFT:
+            case Direction.LEFT:
                 position.X -= 1;
                 ballPosition.X -= 1;
-                boundPosition.X -= dir == direction.LEFT ? 2 : 1;
+                boundPosition.X -= dir == Direction.LEFT ? 2 : 1;
                 break;
         }
         if (BoundCheck(boundPosition.X, boundPosition.Y))
         {
+            PlayfieldPosition oldPlayerPosition = currentPosition;
             UpdatePosition(position.X, position.Y);
             heldBall.UpdatePosition(ballPosition.X,ballPosition.Y);
-
+            levelManager.Reference.SetTileValue(oldPlayerPosition.X, oldPlayerPosition.Y, EntityType.PLAYER);
         }
     }
-    void MoveWithoutBall(direction direct)
+    void MoveWithoutBall(Direction direct)
     {
         PlayfieldPosition position = currentPosition;
         switch(direct)
         {
-            case direction.UP:
+            case Direction.UP:
                 position.Y += 1;
                 break;
-            case direction.DOWN:
+            case Direction.DOWN:
                 position.Y -= 1;
                 break;
-            case direction.RIGHT:
+            case Direction.RIGHT:
                 position.X += 1;
                 break;
-            case direction.LEFT:
+            case Direction.LEFT:
                 position.X -= 1;
                 break;
         }
@@ -303,7 +292,7 @@ public class PlayerMovement : Entity {
             Rotate(direct);
         }
     }
-    void Move(direction direct)
+    void Move(Direction direct)
     {
         if (!hasBall)
         {

@@ -11,11 +11,6 @@ public class LevelManager : MonoBehaviour,ILevelManager {
 
     PlayfieldData level;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-
     private void OnEnable()
     {
         levelGenerator.AddRegistrationHandle(Register);
@@ -37,10 +32,6 @@ public class LevelManager : MonoBehaviour,ILevelManager {
     {
         level = data;
     }
-    // Update is called once per frame
-    void Update () {
-		
-	}
 
     public PlayfieldData GetLevelData()
     {
@@ -56,5 +47,10 @@ public class LevelManager : MonoBehaviour,ILevelManager {
     {
         level.fieldData[previousX, previousY] = EntityType.EMPTY;
         level.fieldData[obj.Position.X, obj.Position.Y] = obj.Type;
+    }
+
+    public void SetTileValue(int x, int y, EntityType value)
+    {
+        level.fieldData[x, y] = value;
     }
 }

@@ -2,7 +2,7 @@
 XE____PX
 X_XX_X_X
 XBX_UX_X
-X_X___BX
-X_XXX_EX
+X_X_X_BX
+X_X_X_EX
 XP_____X
 XXXXXXXX

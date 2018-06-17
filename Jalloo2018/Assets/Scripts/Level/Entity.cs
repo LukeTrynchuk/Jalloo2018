@@ -40,6 +40,23 @@ namespace DogHouse.Jalloo.Levels
             }
         }
 
+        protected bool BoundCheck(int x, int y)
+        {
+            if (!levelManager.isRegistered())
+            {
+                return false;
+            }
+            PlayfieldData levelData = levelManager.Reference.GetLevelData();
+            if (levelData.fieldData[x, y] == EntityType.EMPTY || levelData.fieldData[x, y] == EntityType.PANEL)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
     }
 
     public enum EntityType
