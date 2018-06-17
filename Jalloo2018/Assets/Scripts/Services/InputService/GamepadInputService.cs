@@ -31,11 +31,11 @@ namespace DogHouse.Jalloo.Services
         void Update()
         {
 #if UNITY_STANDALONE_WIN
-			m_leftJoystick.x = Input.GetAxis("Win_Rightjoystick_Hor");
-			m_leftJoystick.y = Input.GetAxis("Win_Rightjoystick_Ver");
+			m_rightJoystick.x = Input.GetAxis("Win_Rightjoystick_Hor");
+			m_rightJoystick.y = Input.GetAxis("Win_Rightjoystick_Ver");
 			
-			m_rightJoystick.x = Input.GetAxis("Win_Leftjoystick_Hor");
-			m_rightJoystick.y = Input.GetAxis("Win_Leftjoystick_Ver");
+			m_leftJoystick.x = Input.GetAxis("Win_Leftjoystick_Hor");
+			m_leftJoystick.y = Input.GetAxis("Win_Leftjoystick_Ver");
 #else
             m_rightJoystick.x = Input.GetAxis("OSX_Rightjoystick_Hor");
             m_rightJoystick.y = Input.GetAxis("OSX_Rightjoystick_Ver");
