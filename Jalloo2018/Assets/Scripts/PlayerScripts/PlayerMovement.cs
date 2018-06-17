@@ -181,35 +181,59 @@ public class PlayerMovement : Entity {
     {
         Debug.Log("TURNING");
 
-        PlayfieldPosition boundPosition = currentPosition;
+        PlayfieldPosition ballFacingBounds = currentPosition;
+        PlayfieldPosition playerFacingBounds = currentPosition;
+        direction inverse = dir;
+
         switch(direct)
         {
             case direction.UP:
-                boundPosition.Y += 1;
-                boundPosition.X += dir == direction.RIGHT ? 1 : -1;
+                ballFacingBounds.Y += 1;
+                ballFacingBounds.X += dir == direction.RIGHT ? 1 : -1;
 
+                playerFacingBounds.Y += 1;
+                inverse = direction.DOWN;
                 break;
             case direction.DOWN:
-                boundPosition.Y -= 1;
-                boundPosition.X += dir == direction.RIGHT ? 1 : -1;
+                ballFacingBounds.Y -= 1;
+                ballFacingBounds.X += dir == direction.RIGHT ? 1 : -1;
+
+                playerFacingBounds.Y -= 1;
+                inverse = direction.UP;
                 break;
             case direction.RIGHT:
-                boundPosition.X += 1;
-                boundPosition.Y += dir == direction.UP ? 1 : -1;
+                ballFacingBounds.X += 1;
+                ballFacingBounds.Y += dir == direction.UP ? 1 : -1;
 
+                playerFacingBounds.X += 1;
+                inverse = direction.LEFT;
                 break;
             case direction.LEFT:
-                boundPosition.X -= 1;
-                boundPosition.Y += dir == direction.UP ? 1 : -1;
+                ballFacingBounds.X -= 1;
+                ballFacingBounds.Y += dir == direction.UP ? 1 : -1;
+
+                playerFacingBounds.X -= 1;
+                inverse = direction.RIGHT;
                 break;
         }
-        if(BoundCheck(boundPosition.X,boundPosition.Y))
+        if(BoundCheck(ballFacingBounds.X,ballFacingBounds.Y))
         {
             PlayfieldPosition ballOldPosition = heldBall.Position;
             
             UpdatePosition(ballOldPosition.X, ballOldPosition.Y);
             Rotate(direct);
-            heldBall.UpdatePosition(boundPosition.X, boundPosition.Y);
+            heldBall.UpdatePosition(ballFacingBounds.X, ballFacingBounds.Y);
+            return;
+        }
+
+        if(BoundCheck(playerFacingBounds.X, playerFacingBounds.Y))
+        {
+            PlayfieldPosition oldPlayerPosition = currentPosition;
+
+            UpdatePosition(playerFacingBounds.X, playerFacingBounds.Y);
+            Rotate(inverse);
+            heldBall.UpdatePosition(oldPlayerPosition.X, oldPlayerPosition.Y);
+            return;
         }
     }
 
