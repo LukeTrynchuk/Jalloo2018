@@ -5,6 +5,8 @@ using DogHouse.Core.Services;
 using DogHouse.Jalloo.Services;
 using DogHouse.Jalloo.Levels;
 
+public enum direction { RIGHT,LEFT,UP,DOWN}
+
 public class PlayerMovement : Entity {
 
     ServiceReference<IInputService> inputService = new ServiceReference<IInputService>();
@@ -12,6 +14,7 @@ public class PlayerMovement : Entity {
 
     PlayfieldData levelData;
     bool hasBall = false;
+    direction dir = direction.UP;
     
     protected override void OnEnable()
     {
@@ -57,7 +60,7 @@ public class PlayerMovement : Entity {
             UpdatePosition(currentPosition.X, nextPosY);
             if(!hasBall)
             {
-                transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+                Rotate(direction.UP);
             }          
         }
     }
@@ -70,7 +73,7 @@ public class PlayerMovement : Entity {
             UpdatePosition(currentPosition.X, nextPosY);
             if(!hasBall)
             {
-                transform.rotation = Quaternion.Euler(new Vector3(0, 180f, 0));
+                Rotate(direction.DOWN);
             }  
         }
     }
@@ -83,7 +86,7 @@ public class PlayerMovement : Entity {
             UpdatePosition(nextPosX, currentPosition.Y);
             if (!hasBall)
             {
-                transform.rotation = Quaternion.Euler(new Vector3(0, 90f, 0));
+                Rotate(direction.RIGHT);
             }
         }
     }
@@ -96,7 +99,7 @@ public class PlayerMovement : Entity {
             UpdatePosition(nextPosX, currentPosition.Y);
             if(!hasBall)
             {
-                transform.rotation = Quaternion.Euler(new Vector3(0, 270f, 0));
+                Rotate(direction.LEFT);
             }
         }
     }
@@ -111,7 +114,32 @@ public class PlayerMovement : Entity {
 
     void Interact()
     {
-       
+        if(!hasBall)
+        {
+            switch (dir)
+            {
+                case direction.UP:
+                    AttemptGrab(currentPosition.X, currentPosition.Y + 1);
+                    break;
+                case direction.DOWN:
+                    AttemptGrab(currentPosition.X, currentPosition.Y - 1);
+                    break;
+                case direction.RIGHT:
+                    AttemptGrab(currentPosition.X + 1, currentPosition.Y);
+                    break;
+                case direction.LEFT:
+                    AttemptGrab(currentPosition.X - 1, currentPosition.Y);
+                    break;
+            }
+        }
+    }
+
+    void AttemptGrab(int x, int y)
+    {
+        if (levelManager.Reference.GetLevelData().fieldData[x, y] == EntityType.BALL)
+        {
+            hasBall = true;
+        }
     }
 
     bool BoundCheck(int x, int y)
@@ -129,5 +157,25 @@ public class PlayerMovement : Entity {
         {
             return false;
         }
+    }
+
+    void Rotate(direction direct)
+    {
+        switch(direct)
+        {
+            case direction.RIGHT:
+                transform.rotation = Quaternion.Euler(new Vector3(0, 90f, 0));
+                break;
+            case direction.LEFT:
+                transform.rotation = Quaternion.Euler(new Vector3(0, 270f, 0));
+                break;
+            case direction.DOWN:
+                transform.rotation = Quaternion.Euler(new Vector3(0, 180f, 0));
+                break;
+            case direction.UP:
+                transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+                break;
+        }
+        dir = direct;  
     }
 }
