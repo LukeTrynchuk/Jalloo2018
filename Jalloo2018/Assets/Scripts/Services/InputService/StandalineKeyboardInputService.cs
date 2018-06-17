@@ -14,6 +14,7 @@
         public event Action RightPressed;
         public event Action LeftPressed;
         public event Action InteractPressed;
+        public event Action<Vector2> RotationChanged;
         #endregion
 
         #region Main Methods
