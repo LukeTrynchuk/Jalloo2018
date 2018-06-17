@@ -12,6 +12,8 @@
         event System.Action RightPressed;
         event System.Action LeftPressed;
 
+        event System.Action<Vector2> RotationChanged;
+
         event System.Action InteractPressed;
 	}
 }
